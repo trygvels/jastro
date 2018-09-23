@@ -1,0 +1,307 @@
+"###############################################################################################"
+TODO
+#For microwave sky thing: Show raw, removed dipole, (raw-dipole-cmb=foregrounds), cmb
+
+
+Skriv conclusion: Future data sets to be added, (Haslam, WMAP, C-BASS, S-PASS, QUIJOTE [Sync,FF,SD, SZ] - IRAS, DIBE, FIRAS, WISE, HERSHEL [TD, CIB, ZODI], Spider, LITEbird [B-mode pol])
+                  Time domain gibbs sampling. NPIPE+COMMANDER i samme pipeline. (This gives more SHT? )
+
+"###############################################################################################"
+[SPESIFIKE ENDRINGER]
+Flere siteringer?
+
+Acknowledgements
+quotes
+abstract
+evo side
+powspec inkluder lcdm i caption
+
+sjekk store bokstaver i overskrifter
+"###############################################################################################"
+[TIPS]
+Ikke bruk "perfect"
+Ikke vær barnslig
+Skriv en bra avhandling
+Kapittel skal alltid starte på oddetallsider
+Likninger skal inngå i setninger
+
+Problem - Løsning - Problem - Løsning
+"###############################################################################################"
+[SPML]
+Hvorfor skal dust beta være uniform? Skal den ikke følge dust morphologien?
+-
+
+Scanning strategy of Planck cant resolve DPC mapmaking degeneracies, hvordan?
+-scanner punkter i en retning
+
+Hva kan vi si om low ell power spectrum BR i dx11?
+-
+
+Computational scaling i 5.4 - Går vi ra On^3 til On^3/2 fra MH til gibbs?
+-%By applying Gibbs sampling as opposed to mapping out the posterior through the brute force approach with Metropolis-Hastings, we have reduced the computational scaling of our problem to $\mathcal{O}(n^{3/2})$ down from $\mathcal{O}(n^{3})$. This renders the sampling of big data sets feasible, as a brute force method would be unable to sample high-resolution maps and hence smaller scales.
+
+Hva er kolonnene i powspec plottet?
+-
+
+Hvordan kan jeg argumentere for at forskjellene jeg ser i dx11 og dx12 kommer av mapmaking?
+-
+kommenter hull i ting
+[BESVARTE SPML]
+
+Hva er greia med Free-free i 100-217 DX12 residuals?
+- Dårlig beta fit, så lf fjernes i høyere frekvenser
+
+
+*HVorfor er full chi^2 så høy i første NPIPE, men ikke dx11 og 12, selv om vi fitter CO på begge?
+-Kan det være enkle verdier som er veldig store?
+
+*Skal jeg skifte data-set?
+-Skift
+
+*Hvorfor kalibrerer vi dipolen mot DX12?
+-VI sammenlikner for å få en ca. konsistent dipol. Harald har tallene for de nye dipolene. Harald har kjørt en lores kjøring for å få tak i disse. Tuna opp commander for å få klarere dipol
+
+
+*Trenger en forklaring på CG i sammenheng med posterior. Er det sånn at vi gjør CG på hver conditional?
+- Legg den ned til diskusjonspunkt på hver gibbs sample steg
+
+*Hvor er relative gain estimation i data modellen for planck?
+- Bruk den i planck kapittel
+
+*Hvorfor fryser vi dust temperatur mellom dx11 og 12? Gjør ikke dette det vanskeligere å sammenlikne med Npipe?
+- Hadde ikke tid til å prosessere dx11 og 12 ,ed samme presisjon som npipe, som er hovedperson
+
+*Hvordan er Bandpass lettere og korrigere for når den også er avhengig av CMB?
+- Degenerert Faktisk vanskeligere med båndpass, fordi det er en ikkelinear eekt
+
+*Hvor langt ned vil vi i residual kartene? Og hva vil vi ha der?
+- VI vil ha de mest sanne kosmologiske parameterne. VI har ikke noe endelig mål, men vil gjøre det så bra som mulig. Løs systematisk feil som gjør at parametere er lite robuste
+
+*Hvorfor står det at jewell er 2002 og wandelt 2003? Skal ikek alle være 2004?
+- Vi vil bruke ppublisert versjon- se på nasa ads og finn bibtex
+
+*Sitere commander
+-Gibbs.  Jewell, Wandelt, Eriksen 2004 .Commander:  Eriksen 2004 + Eriksen 2008, CMB, CMB + forgrunner
+
+*Why do we get a worse chisq when we include more maps, when the same thing gives better dust and CO fits?
+- More maps makes the model tighter. The same with more parameters
+
+*Hvordan vet vi om kartene er bedre ?
+- Sammenlikner residualer og komponent kart?
+
+*Hovrfor kan vi ikke splitte themal dust? Hva mangler vi?
+- Se kommentar
+
+"###############################################################################################"
+[Artikler]
+Power spectrum estimation from high resolution maps by gibbs sampling
+Planck 2015 results 1. overview of products and scientific results
+Joint bayesian component separation and cmb power spectrum estimation
+Planck 2015 results X. diffuse component separation: Foreground maps
+
+What is commander: https://wiki.cosmos.esa.int/planckpla2015/index.php/CMB_and_astrophysical_component_maps
+
+[Interesting plots]
+Foregrounds (fig 18. i https://arxiv.org/pdf/1502.01582.pdf)
+
+1 Konvergensplot (f.eks. en fg_ind_mean med alle verdier normalisert mot konvergert verdi) Bruk chains_ml_npipe_sbg_0064_v8
+2 Power spectrum for npipe
+3 Power spectrum for dx12
+4 BP for single-bolometer for å løse degeneracy
+
+5 Referanseset dx12 - chains_cl_dx12_v2
+diff dx12 dx11 - chains_cl_dx11_v3.3
+Referanseset npipe
+diff npipe-referanse dx12
+diff npipe to npipe referanse
+
+
+6 Burnin time CL, (CL-CLt)/CLt (POWER SPECTRUM ESTIMATION FROM HIGH-RESOLUTION MAPS BY GIBBS SAMPLING:)
+7 Spectral energy densities (https://arxiv.org/pdf/1502.01588.pdf)
+8 CO ratios (https://arxiv.org/pdf/1502.01588.pdf)
+9 MAPS GENERAL (https://arxiv.org/pdf/1502.01588.pdf)
+10. MD-corrections
+
+
+
+[OPPSETT]
+1. Cosmology 101
+  1.1 Our current understanding
+  1.2 The cosmological principle and spacetime
+  1.3 The infant UNiverse
+
+2. Cosmic Microwave History
+    2.1 Early years
+    2.2 Birth of radio astronomy
+    2.3 New developments in Cosmology
+      2.3.1 COBE
+    2.4 After COBE
+      2.4.1 WMAP
+      2.4.2 Planck
+    2.5 Future of CMB research
+      2.5.1 Polarization and the hunt for B-modes
+      2.5.2 Pasiphae
+3. The microwave sky
+    3.1 Foreground Components
+      3.1.1 Dust
+        Thermal
+        Spinning
+      3.1.2 Synchrotron
+      3.1.3 Free-free
+      3.1.4 CO
+4. CMB analysis toolbox
+    4.1 Spherical harmonics
+    4.2 The likelihood function
+    4.3 Gibbs Sampling
+    4.4 COMMANDER
+5. Planck
+    5.1 Instrument
+    5.2 Mapmaking
+      5.2.1 SROLL
+      5.2.2 NPIPE
+
+      for freq in "030" "044" "070" "100" "143" "217" "353"; do
+        map_editor subtract "map_dx11"*${freq}*".fits" "npipe"*${freq}*".fits"  "dx11npipe_diff_"${freq}".fits"
+        map2png "dx11npipe_diff_"${freq}".fits" -bar -range 10
+      done
+
+      for freq in "030" "044" "070" "100" "143" "217" "353"; do
+        map_editor subtract "map"*${freq}*".fits"  "npipe"*${freq}*".fits"  "srollnpipe_diff_"${freq}".fits"
+        map2png "srollnpipe_diff_"${freq}".fits" -bar -range 10
+      done
+
+      for freq in "030" "044" "070" "100" "143" "217" "353"; do
+        map_editor subtract "map"*${freq}*.fits cmb_c0001_k00800.fits "srollcmb_diff_"${freq}".fits"
+        map2png "srollcmb_diff_"${freq}".fits" -bar -min 0 -max 300
+      done
+6. Results
+    6.1 DX12
+      chains_cl_dx12_v2 sample 800
+
+    6.2 DX11
+      show difference from dx12 only?
+
+    6.3 Evolution of NPIPE
+    Setup, maybe 4 maps from each run on 1 side of column, text on other side?
+
+    "NPIPE MILESTONES"
+      "5.4 Gain calibration on 545 and 857 v5.4 (Extra dipoles using dx12 values)""
+      * Show how it changes when adjusting gain, and the reason we fit gains (compare with Chains_ml_npipe_v5.6)
+
+      "7 Residual dipoles on LFI, start fitting v7 (Longer run)"
+      * Fitted for the leftover dipoles, and let 5.4 burn in longer
+
+      "14.2 Subtracting dipole using templates, calibrating all gain,"
+      * see difference in both gain calibration and quadrupole removal
+
+      - Going to nside 64 with single bolometers -
+      "chains_ml_npipe_sbg_0064_v8 Fit gain, new maps, monopole (Frozen selected), bp corrections. CO line ratios on all sb"
+      * BP corrections, see v4-v6 or samples in v8 (COMPARE THIS TO ONE WITHOUT BP CORR)
+
+      - Changing to npipe5v5 and converting to shorn -
+      "chains_ml_npipe5_shb_n0064_v1 Fit gain, npipe5v5, fit some monopoles and bp corrections. Some maps removed and some converted to shorn."
+      * Show why to convert to shorn and why to change dust prior
+        chains_ml_npipe5_shb_n0064_v2 Dust beta prior to 1.6, removed 217 and converted 353-3 to shorn
+        chains_ml_npipe5_shb_n0064_v3 353-4 to shorn, removed 353-1, 5 and 6.
+
+      "chains_ml_npipe5_shb_n0064_v11 using zodi templates, setting 857-2 gain to 1.1 again and fitting gains."
+      * apply small mask from 857 to try to get rid of moref
+
+
+      "chains_ml_npipe5_shb_n0064_v18 setting co on 353 to 1 and restarting with 353-2 gain to 1.0 AND 857-2 to 1.1 (mistake) And free up gains on all except: 30, 143, 857-2"
+      * Compare final result to dx12? Is this final?
+
+
+7. Conclusion and further improvements
+
+
+Planck LFI  &030 &   &    0.982432&     0.000000     &\\
+            &044 &   &    0.984135&     14.11390     &\\
+            &070 &   &    0.995503&     19.54450     &\\
+Planck HFI  &100 &1a &    1.002459&     8.297117     &\\
+            &    &1b &    1.001939&     7.204038     &\\
+            &    &2a &    1.003558&     9.445082     &\\
+            &    &2b &    1.003431&     9.540048     &\\
+            &    &3a &    1.002403&     8.666812     &\\
+            &    &3b &    1.002277&     7.164984     &\\
+            &    &4a &    1.004222&     10.38996     &\\
+            &    &4b &    1.003666&     9.791668     &\\
+            &143 &   &    1.000816&     22.00000     &\\
+            &217 &2  &    0.999717&     68.65903     & -0.779400\\
+            &    &3  &    0.999586&     74.37238     &\\
+            &    &5a &    0.999047&     68.79398     &\\
+            &    &5b &    0.999735&     67.74893     &\\
+            &    &6  &    1.000076&     63.44133     &\\
+            &    &7a &    0.999051&     67.94434     & -0.541300\\
+            &    &7b &    0.998537&     68.93946     &\\
+            &    &8  &    0.999484&     65.88998     & -0.289800\\
+            &353 &1  &    1.047304&     416.8616     & -3.018900\\
+            &    &2  &    1.030700&     419.9327     & -2.401600\\
+            &    &3  &    1.008896&     414.3506     & -0.558700\\
+            &    &4  &    1.016336&     432.7418     & -0.670800\\
+            &    &5  &    0.997274&     410.0113     & 0.150100\\
+            &    &6  &    1.034466&     402.8273     & -2.411900\\
+            &545 &1  &    1.001981&    0.3596256     &\\
+            &    &2  &    1.026543&    0.3598056     &\\
+            &    &4  &    1.022230&    0.3592131     &\\
+            &857 &1  &    1.077533&    0.6226399     &\\
+            &    &2  &    1.100000&    0.6200000     &\\
+            &    &3  &    1.081117&    0.6248062     &\\
+            &    &4  &    1.118268&    0.6309479     &\\[1ex]
+
+"##################"
+"####" QUOTES "####"
+"##################"
+
+[chap 1 Cosmology primer]
+*I would like to uncover the secrets of the universe - Megan Fox
+I don't expect to be understood at all. - Kanye West
+
+[chap 2 The cosmic microwave history]
+*I feel like I'm too busy writing history to read it. - Kanye West
+
+[chap 3 The microwave sky]
+*I always believe that the sky is the beginning of the limit. - MC Hammer
+
+Shoot for the stars, so if you fall you land on a cloud. - Kanye West
+
+[chap 4 The planck Instrument]
+
+Technology is cool, but you've got to use it as opposed to letting it use you. - prince
+Nobody can tell me where i can and can't go. - Kanye West
+I wanted to make noise, not study theory. - James Hetfield
+
+[chap 5 CMB analysis]
+*Dont try this at home - Steve O
+
+
+It should be mandatory that you understand computer science - will.i.am
+Here's something that's contrary to popular belief: I actually don't like thinking.
+I think people think I like to think a lot. And I don't. I do not like to think at all. - Kanye west
+I make Jessica Simpson look like a rock scientist. - Tara reid
+
+[chap 6 Old state of the art sky maps]
+
+We've got a situation.  — Mike "the Situation" Sorrentino
+I still think I'm the greatest. - Kanye West
+
+[chap 7 Evolution of npipe]
+*People don't understand the pressure on me to look perfect - Kim Kardashian
+
+
+I'm lucky, Hard work is the key, but luck plays a part - Neil Diamond
+We came into a broken world, and we're the cleanup crew - Kanye west
+
+[chap 8 New state of the art sky maps]
+The genius thing about the way i create is that i create with other geniuses - Kanye west
+*Once you replace negative thoughts with positive ones, you'll start having positive results - Willie Nelson
+[chap 9 Conclusion and future prospects]
+Our work is never over - Kanye west
+"Is that your final answer?" — Regis Philbin
+* Predictions are difficult. Especially about the future. - Yogi Berra, Baseball player
+
+
+I see stuff from the future, and I’m such a futurist that I have to slow down and talk in the present. - Kanye West
+
+You may be talented, but youre not kanye west
+Ive been noticing gravity since i was very young - Cameron Diaz

@@ -1,0 +1,78 @@
+# Parameter file for Commander - Ingunn Kathrine Wehus - 2015
+
+OPERATION                     = optimize   #optimize #sample
+VERBOSITY                     = 3         # 0 = silent, 1 = chatty, 2 = lots, 3 = debug
+
+POLARIZATION                  = .false.
+SAMPLE_TT_MODES               = .true.
+SAMPLE_TE_MODES               = .false.
+SAMPLE_TB_MODES               = .false.
+SAMPLE_EE_MODES               = .false.
+SAMPLE_EB_MODES               = .false.
+SAMPLE_BB_MODES               = .false.
+
+NUM_REALIZATIONS              = 1   # do not change
+NUM_CHAIN_PER_REALIZATION     = 1   # put equal to NUM_GROUPs
+NUM_GROUPS                    = 1  # increase if you have more processors
+NUMBAND                       = 9            # Number of map sets to include
+NUM_PROC_PER_BAND             = 1          # Number of processors per band
+
+NSIDE                         = 256    /  # Healpix resolution parameter
+LMAX                          = 1024      # Maximum multipole to include
+LMAX_LOWRES                   = 1024    # Maximum multipole to include for indices
+FWHM_LOWRES                   =  40.      # FWHM in arcmin of lowres maps
+
+NUM_GIBBS_ITER                = 50     # Length of one Markov chain
+NUM_STEP_WITH_ML_SEARCH       = 1000
+UTPUT_CHISQ                  = .true.  # Output maps of chi^2
+OUTPUT_MIXING_MATRIX          = .false. #.true.
+OUTPUT_BAND_CHISQ             = .true.
+OUTPUT_GAIN_RESIDUALS         = .false.
+OUTPUT_ML_MAP_AND_COVMAT      = .false.
+CHAIN_DIRECTORY               = 'chains_ml_npipe_v6.1'
+
+OUTPUT_FREQUENCY_COMPONENT_MAPS01     = .false.
+OUTPUT_FREQUENCY_COMPONENT_MAPS02     = .false.
+OUTPUT_FREQUENCY_COMPONENT_MAPS03     = .false.
+OUTPUT_FREQUENCY_COMPONENT_MAPS04     = .false.
+OUTPUT_FREQUENCY_COMPONENT_MAPS05     = .false.
+OUTPUT_FREQUENCY_COMPONENT_MAPS06     = .false.
+OUTPUT_FREQUENCY_COMPONENT_MAPS07     = .false.
+OUTPUT_FREQUENCY_COMPONENT_MAPS08     = .false.
+OUTPUT_FREQUENCY_COMPONENT_MAPS09     = .false.
+OUTPUT_FREQUENCY_COMPONENT_MAPS10     = .false.
+OUTPUT_FREQUENCY_COMPONENT_MAPS11     = .false.
+OUTPUT_FREQUENCY_COMPONENT_MAPS12     = .false.
+
+OVERVIEW_MASK_HIGHFG          = wmap_temperature_kq85_analysis_mask_r8_9yr_v5.fits
+OVERVIEW_MASK_LOWFG           = wmap_temperature_kq75_analysis_mask_r8_9yr_v5.fits
+OVERVIEW_FREQ_MIN             =    5.d0
+OVERVIEW_FREQ_MAX             = 1300.d0
+
+CGD_MAXITER                   = 10000   # Conjugate gradients time out limit
+CGD_TOLERANCE                 = 1.d-5   # Fractional CG convergence criterion
+
+REGULARIZATION_NOISE          = -1.d0     #(rms in uK) 0 for pix
+
+CL_BINNING                    = .false.  # Bin Cls
+BINFILE                       = 'bins.txt' # Bin definition file
+
+# Masks
+MASKFILE                      = commander_dx12_mask_n0256_likelihood_v2.fits #mask_proc_n256.fits
+MASKFILE_CORR                 = commander_dx12_mask_n0256_likelihood_v2.fits #mask_proc_n256.fits
+PROCESSING_MASK               = mask_proc_n256.fits
+GAIN_APODIZATION_MASK         = wmap_temperature_kq85_analysis_mask_r8_9yr_v5.fits
+FWHM_APOD_GAINMASK            = 120.
+
+CORR_CHISQ_THRESHOLD          = 30.
+LMAX_CORR                     = 500
+NSIDE_CORR                    = 16
+OUTPUT_CROSS_CORRELATION_STATS = .false.
+
+TEMPLATE_AMP_INPUT            = md_init_dx12_n0256_40arcmin_ik102.dat
+GAIN_INIT                     = gain_init_dx12_n0256_40arcmin_ik102_v6.1.dat
+BANDPASS_INIT                 = none
+GAIN_INIT_RMS                 = 0.0
+BP_INIT_RMS                   = 0.0
+
+IN_POWSPECFILE                = camb_ctp3_init_cls.dat

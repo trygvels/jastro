@@ -1,0 +1,612 @@
+[COMMANDS]
+Cluster activity:
+http://owl.uio.no/ganglia/?c=owl&m=load_one&r=hour&s=descending&hc=4&mc=2
+
+https://www.youtube.com/watch?v=vpk_1gldOAE
+ssh -YC trygvels@login.astro.uio.no
+ssh mothallah.uio.no
+ssh owl17-28
+
+rsync -Pt trygvels@login.astro.uio.no:/uio/hume/student-u68/trygvels/master/cdata/tut/temp/chains_ml_32band_v2/*png .
+alias a2l="rsync -Pt trygvels@login.astro.uio.no:/uio/hume/student-u68/trygvels/master/cdata/"
+cp param_n64_ml_32band.txt chains_ml_32band_v2/; mpirun -n 32 /uio/hume/student-u68/trygvels/master/Commander/commander1/src/commander/commander param_n64_ml_32band.txt 2>&1 | tee chains_ml_32band_v2/slurm.txt
+
+cp -r ~ingunnkw/cdata/like .
+s
+cp ../plot_maps.sh .
+./plot_maps.sh 00001
+
+map2png asd.fits
+
+diff file1 file2
+
+Sync stuff from astro to local
+$a2lsync/like/npipe4v203/*png .
+
+Open preview
+visu
+
+[Scale nside maps]
+map_editor ud_grade [in] [nside] [out]
+
+Show image in terminal
+imgcat
+
+Permission denied?
+chmod a+r **
+
+forskjellen på bandpass 354, er at de setter sammen flere detektorer. (For polarisasjon trenger man ikke alle)
+kjører bp_jmd_353-all_ghz_nodup.dat
+
+less -S fg_ind_mean_no0001.dat
+map_editor print_stats
+[Paths]
+/mn/stornext/u3/ingunnkw/resdata/npipe4/maps/npipe4v207
+/mn/stornext/u3/ingunnkw/resdata/npipe4/maps/npipe4v205
+
+/mn/stornext/u3/ingunnkw/resdata/dx12/maps/lfi_corrected
+/mn/stornext/u3/ingunnkw/resdata/dx12/maps/hfi
+
+for i in /mn/stornext/u3/ingunnkw/resdata/dx12/maps/hfi/*GHz*all_ful.RD12_RC4.I.fits; do cp $i .; done
+cp /mn/stornext/u3/ingunnkw/resdata/dx12/maps/hfi/*GHz*ful.all_ful.RD12_RC4.P.fits* .
+for i in /mn/stornext/u3/ingunnkw/resdata/dx12/maps/lfi_corrected/*full.fits; do cp $i .; done
+
+[COMPARING MAPS]
+
+nside 256
+Planck 2017 (dx12)
+Planck 2015 (dx11)
+  - Kjør for 256 men bytt ut kart, rms og bandpass.
+  - (Bruker ikke de ekstra bp_70 v2)
+
+Bandpass
+keeep bandpass rms from dx12
+[CL Kjøresettings]
+cp param_cl_dx11_v3.txt chains_cl_dx11_v3/; mpirun -n 9 --hostfile machinefile_owl_gen3.txt /uio/hume/student-u68/trygvels/master/Commander/commander1/src/commander/commander param_cl_dx11_v3.txt 2>&1 | tee chains_cl_dx11_v3/slurm.txt
+--hostfile machinefile_owl_gen3.txt
+
+cp param_cl_dx11_v3.txt chains_cl_dx11_v3/; mpirun -n 9 --hostfile machinefile_owl_gen3.txt /uio/hume/student-u68/trygvels/master/Commander/commander1/src/commander/commander param_cl_dx11_v3.txt 2>&1 | tee chains_cl_dx11_v3/slurm.txt
+
+
+cp param_cl_dx12_v1.txt chains_cl_dx12_v1/; mpirun -n 72 /uio/hume/student-u68/trygvels/master/Commander/commander1/src/commander/commander param_cl_dx12_v1.txt 2>&1 | tee chains_cl_dx12_v1/slurm.txts
+--hostfile machinefile_owl_gen3.txt
+
+[CORRECTOR]
+for i in 0 1 2 3 4 5 6 7 8;
+do
+    echo "$i"
+    $map_editor subtract ${npipe[$i]} ${dx12[$i]} diff.fits
+    $map_editor subtract_mono_dipole diff.fits commander_dx12_mask_n0256_likelihood_v2.fits correct.fits
+    $map_editor subtract diff.fits correct.fits mono.fits
+    $map_editor subtract ${npipe[$i]} mono.fits ${npipenew[$i]}
+
+done
+
+[Plot til onsdag]
+DX11 Fryst tempratur men justerer spektralindeksene
+
+4 stk Power spectrum 0-30
+litt offsett mellom dem
+DX12 802 (Med commander maske)
+DX12 Ingunn OK
+DX11 1800 (322*3+809) (Med commander maske, fjernet dipol, byttet kart, rms og bp)
+DX11 Public Release (PLANCK 2015) OK
+
+7263 samples
+Burnin 50
+
+[HVOR LIGGER DATAEN]
+DX11 ligger på lokal datamaskin i dx11_cl_v2
+Når sammenliknet jeg dx11 med dx12 rms og bandpass?
+
+[KJØR BR]
+rm sigma_dx12.fits
+rm gauss_dx12.fits
+~/master/Commander/commander1/src/comm_process_resfiles/comm_process_resfiles sigma2fits sigma_dx11_flat.fits 2000 1 1024 1 50
+~/master/Commander/commander1/src/comm_process_resfiles/comm_like_tools sigma2gauss sigma_dx.fits gauss_dx12_ingunn.fits 2 250 1 24 1 500 1000000
+~/master/Commander/commander1/src/comm_process_resfiles/comm_like_tools sigma2cl_gauss_BR gauss_dx12_ingunn24.fits 50 dx12_ingunn24
+
+~/master/Commander/commander1/src/comm_process_resfiles/comm_like_tools sigma2cl_gauss_BR sigma_gauss_commander_dx12_v2.fits 50 dx12_ingunn
+Comparing DX12, DX11 and plack 2015 was done by using a Blackwell-Rao Estimator. Having ran the code for days on the Owl clusters, we check if \textbf{it has reached convergence} by splitting the samples in two, and comparing the final CL-files to see if there is less than 1\% difference between the two halves.
+
+\begin{verbatim}
+~/master/Commander/commander1/src/comm_process_resfiles/comm_process_resfiles sigma2fits sigma_dx11_flat.fits 2000 1 1024 1 50\\
+~/master/Commander/commander1/src/comm_process_resfiles/comm_like_tools sigma2gauss sigma_dx.fits gauss_dx12_ingunn.fits 2 250 1 24 1 500 1000000\\
+~/master/Commander/commander1/src/comm_process_resfiles/comm_like_tools sigma2cl_gauss_BR gauss_dx12_ingunn24.fits 50 dx12_ingunn24
+\end{verbatim}
+
+
+We compare the results for:
+\begin{itemize}
+    \item DX11 with 7263 samples using the same bandpass and rms as dx12.
+    \item DX12 with 800 samples (Or Ingunns run with 24 chains and ??? samples)
+    \item Planck 2015 release.
+\end{itemize}
+
+\subsection{DX11}
+Run with commander with bandpass and RMS from dx12. Also mono-dipole correcting all inputmaps with:
+
+\begin{verbatim}
+for i in 0 1 2 3 4 5 6 7 8;
+do
+    echo "$i"
+    rm diff.fits
+    rm mono_dipole_map.fits
+    map_editor subtract ${dx11[$i]} ${dx12[$i]} diff.fits
+    map_editor subtract_mono_dipole diff.fit commander_dx12_mask_n0256_likelihood_v2.fits mono_dipole_map.fits
+    map_editor subtract ${dx11[$i]} mono_dipole_map.fits ${new[$i]}
+done
+\end{verbatim}
+
+
+[Npipe]
+Plot new MAPS
+[Fit gain offset for 545]
+map_editor fit_gain_offset_dipole map_dx12_v2_545_0256_40arcmin_full.fits map_npipe4v205_v1_545_2_0256_40arcmin_full.fits mask_fullsky_n256.fits commander_dx12_mask_n0256_likelihood_v2.fits residual.fits
+map_editor subtract_mono_dipole map_npipe4v205_v1_545_2_0256_40arcmin_full.fits commander_dx12_mask_n0256_likelihood_v2.fits map_npipe4v205_v1_545_2_0256_40arcmin_full_MDCOR.fits -9461.2080 -170.7340 -2241.2031 2531.9060
+map_editor scale map_npipe4v205_v1_545_2_0256_40arcmin_full_MDCOR.fits map_npipe4v205_v1_545_2_0256_40arcmin_full_MDCOR.fits 0.00005773019324
+
+[Fit gain offset for 857]
+map_editor fit_gain_offset_dipole map_dx12_v2_857_0256_40arcmin_full.fits map_npipe4v205_v1_857_2_0256_40arcmin_full.fits mask_fullsky_n256.fits commander_dx12_mask_n0256_likelihood_v2.fits residual.fits
+map_editor subtract_mono_dipole map_npipe4v205_v1_857_2_0256_40arcmin_full.fits commander_dx12_mask_n0256_likelihood_v2.fits map_npipe4v205_v1_857_2_0256_40arcmin_full_MDCOR.fits -1209982.0000 -2113.7407 -2830.7537 2800.3967
+map_editor scale map_npipe4v205_v1_857_2_0256_40arcmin_full_MDCOR.fits map_npipe4v205_v1_857_2_0256_40arcmin_full_MDCOR.fits 0.000001543401441
+
+17321.9583
+647919.5712
+
+[NPIPE HIRES]
+npipe4v205_030_map.fits  npipe4v205_353_map.fits    npipe4v205_857-3_map.fits
+npipe4v205_044_map.fits  npipe4v205_545-1_map.fits  npipe4v205_857-4_map.fits
+npipe4v205_070_map.fits  npipe4v205_545-2_map.fits  npipe4v207_030_map.fits
+npipe4v205_100_map.fits  npipe4v205_545-4_map.fits  npipe4v207_044_map.fits
+npipe4v205_143_map.fits  npipe4v205_857-1_map.fits  npipe4v207_070_map.fits
+npipe4v205_217_map.fits  npipe4v205_857-2_map.fits
+
+
+map_editor fit_gain_offset_dipole 545GHz_ful.all_ful.RD12_RC4.I.fits npipe4v205_545-2_map.fits mask_fullsky_n256.fits commander_dx12_mask_n0256_likelihood_v2.fits residual.fits
+map_editor subtract_mono_dipole npipe4v205_545-2_map.fits commander_dx12_mask_n2048_likelihood_v2.fits npipe4v205_545-2_map_MDCOR.fits -9461.2080e-6 -170.7340e-6 -2241.2031e-6 2531.9060e-6
+map_editor scale npipe4v205_545-2_map_MDCOR.fits npipe4v205_545-2_map_MDCOR.fits 57.73019324
+
+0.0025
+0.00005773019324
+
+map_editor fit_gain_offset_dipole 857GHz_ful.all_ful.RD12_RC4.I.fits npipe4v205_857-2_map.fits mask_fullsky_n2048.fits commander_dx12_mask_n2048_likelihood_v2.fits residual.fits
+map_editor subtract_mono_dipole npipe4v205_857-2_map.fits commander_dx12_mask_n2048_likelihood_v2.fits npipe4v205_857-2_map_MDCOR.fits -1209982.0000e-6 -2113.7407e-6 -2830.7537e-6 2800.3967e-6
+map_editor scale npipe4v205_857-2_map_MDCOR.fits npipe4v205_857-2_map_MDCOR.fits 1.543401441
+
+0.00005773019324
+
+0.000001543401441s
+
+
+
+
+[DX12 HIRES]
+
+[fullress npipe to dx12]
+map_editor fit_gain_offset_dipole 857GHz_ful.all_ful.RD12_RC4.I.fits npipe4v205_857-2_map.fits mask_fullsky_n2048.fits commander_dx12_mask_n2048_likelihood_v2.fits residual.fits
+map_editor subtract_mono_dipole npipe4v205_857-2_map.fits commander_dx12_mask_n2048_likelihood_v2.fits npipe4v205_857-2_map_MDCOR.fits -1.2065 -0.0018 -0.0028 0.0025
+map_editor scale npipe4v205_857-2_map_MDCOR.fits npipe4v205_857-2_map_MDCOR.fits 1.5455950541
+
+030
+map_editor fit_gain_offset_dipole LFI_SkyMap_030_1024_R3.00_bpcorrected_full.fits npipe4v207_030_map.fits mask_fullsky_n1024.fits commander_dx12_mask_n1024_likelihood_v2.fits residual.fits
+
+
+gain =                   1.0006, offset =           0.0008         -0.0002         -0.0022          0.0025
+gain =                   0.9903, offset =         793.6047       -231.9847      -2208.9380       2488.0171
+
+044
+map_editor fit_gain_offset_dipole LFI_SkyMap_044_1024_R3.00_bpcorrected_full.fits npipe4v207_044_map.fits mask_fullsky_n1024.fits commander_dx12_mask_n1024_likelihood_v2.fits residual.fits
+gain =                   0.9985, offset =           0.0012         -0.0002         -0.0022          0.0025
+gain =                   0.9982, offset =        1187.5146       -233.6861      -2223.3757       2504.0229
+
+070
+map_editor fit_gain_offset_dipole LFI_SkyMap_070_1024_R3.00_bpcorrected_full.fits npipe4v207_070_map.fits mask_fullsky_n1024.fits commander_dx12_mask_n1024_likelihood_v2.fits residual.fits
+gain =                   0.9979, offset =           0.0000         -0.0002         -0.0022          0.0025
+gain =                   0.9927, offset =          49.0122       -232.8883      -2215.1926       2494.8877
+
+100
+gain =                   0.9968, offset =          -0.0001         -0.0002         -0.0022          0.0025
+gain =                   0.9996, offset =         -70.3219       -234.0024      -2225.1990       2505.9426
+map_editor subtract_mono_dipole npipe4v205_100_map.fits commander_dx12_mask_n2048_likelihood_v2.fits npipe4v205_100_map_MDCOR.fits -0.0001 -0.0002 -0.0022 0.0025
+map_editor scale npipe4v205_100_map_MDCOR.fits npipe4v205_100_map_MDCOR.fits 0.9968e6
+map2png npipe4v205_100_map_MDCOR.fits -bar -min 0 -max 300
+
+143
+gain =                   0.9990, offset =          -0.0001         -0.0002         -0.0022          0.0025
+gain =                   0.9998, offset =         -96.1997       -233.8859      -2225.7893       2506.5276
+map_editor subtract_mono_dipole npipe4v205_143_map.fits commander_dx12_mask_n2048_likelihood_v2.fits npipe4v205_143_map_MDCOR.fits -0.0001 -0.0002 -0.0022 0.0025
+map_editor scale npipe4v205_143_map_MDCOR.fits npipe4v205_143_map_MDCOR.fits 0.9968e6
+map2png npipe4v205_143_map_MDCOR.fits -bar -min 0 -max 300
+
+217
+gain =                   0.9984, offset =          -0.0002         -0.0002         -0.0022          0.0025
+gain =                   0.9996, offset =        -240.1930       -233.9066      -2224.2588       2504.8645
+map_editor fit_gain_offset_dipole 100 npipe4v205_857-2_map.fits mask_fullsky_n2048.fits commander_dx12_mask_n2048_likelihood_v2.fits residual.fits
+
+map_editor subtract_mono_dipole npipe4v205_217_map.fits commander_dx12_mask_n2048_likelihood_v2.fits npipe4v205_217_map_MDCOR.fits -0.0002 -0.0002 -0.0022 0.0025
+map_editor scale npipe4v205_217_map_MDCOR.fits npipe4v205_217_map_MDCOR.fits 0.9984e6
+map2png npipe4v205_217_map_MDCOR.fits -bar -min 0 -max 300
+
+353
+gain =                   0.9984, offset =           0.0001         -0.0002         -0.0022          0.0025
+gain =                   0.9997, offset =         113.3619       -238.2930      -2229.9639       2508.9846
+map_editor subtract_mono_dipole npipe4v205_353_map.fits commander_dx12_mask_n2048_likelihood_v2.fits npipe4v205_353_map_MDCOR.fits 0.0001 -0.0002 -0.0022 0.0025
+map_editor scale npipe4v205_353_map_MDCOR.fits npipe4v205_353_map_MDCOR.fits 0.9984e6
+map2png npipe4v205_353_map_MDCOR.fits -bar -min 0 -max 300
+
+[RUN for hires npipe]
+map_editor subtract_mono_dipole npipe4v207_030_map.fits commander_dx12_mask_n1024_likelihood_v2.fits npipe4v207_030_map_MDCOR.fits 793.6047e-6 -231.9847e-6 -2208.9380e-6 2488.0171e-6
+map_editor scale npipe4v207_030_map_MDCOR.fits npipe4v207_030_map_MDCOR.fits 1.0097950116e6
+map2png npipe4v207_030_map_MDCOR.fits -bar -range 250
+
+map_editor subtract_mono_dipole npipe4v207_044_map.fits commander_dx12_mask_n1024_likelihood_v2.fits npipe4v207_044_map_MDCOR.fits 1187.5146e-6 -233.6861e-6 -2223.3757e-6 2504.0229e-6
+map_editor scale npipe4v207_044_map_MDCOR.fits npipe4v207_044_map_MDCOR.fits 1.0018032458e6
+map2png npipe4v207_044_map_MDCOR.fits -bar -range 250
+
+map_editor subtract_mono_dipole npipe4v207_070_map.fits commander_dx12_mask_n1024_likelihood_v2.fits npipe4v207_070_map_MDCOR.fits 49.0122e-6 -232.8883e-6 -2215.1926e-6 2494.8877e-6
+map_editor scale npipe4v207_070_map_MDCOR.fits npipe4v207_070_map_MDCOR.fits 1.0073536819e6
+map2png npipe4v207_070_map_MDCOR.fits -bar -range 250
+
+map_editor subtract_mono_dipole npipe4v205_100_map.fits commander_dx12_mask_n2048_likelihood_v2.fits npipe4v205_100_map_MDCOR.fits -70.3219e-6 -234.0024e-6 -2225.1990e-6 2505.9426e-6
+map_editor scale npipe4v205_100_map_MDCOR.fits npipe4v205_100_map_MDCOR.fits 1.0004001601e6
+map2png npipe4v205_100_map_MDCOR.fits -bar -range 250
+
+map_editor subtract_mono_dipole npipe4v205_143_map.fits commander_dx12_mask_n2048_likelihood_v2.fits npipe4v205_143_map_MDCOR.fits -96.1997e-6 -233.8859e-6 -2225.7893e-6 2506.5276e-6
+map_editor scale npipe4v205_143_map_MDCOR.fits npipe4v205_143_map_MDCOR.fits 1.00020004e6
+map2png npipe4v205_143_map_MDCOR.fits -bar -range 250
+
+map_editor subtract_mono_dipole npipe4v205_217_map.fits commander_dx12_mask_n2048_likelihood_v2.fits npipe4v205_217_map_MDCOR.fits -240.1930e-6 -233.9066e-6 -2224.2588e-6 2504.8645e-6
+map_editor scale npipe4v205_217_map_MDCOR.fits npipe4v205_217_map_MDCOR.fits 1.0004001601e6
+map2png npipe4v205_217_map_MDCOR.fits -bar -range 250
+
+map_editor subtract_mono_dipole npipe4v205_353_map.fits commander_dx12_mask_n2048_likelihood_v2.fits npipe4v205_353_map_MDCOR.fits 113.3619e-6 -238.2930e-6 -2229.9639e-6 2508.9846e-6
+map_editor scale npipe4v205_353_map_MDCOR.fits npipe4v205_353_map_MDCOR.fits 1.00030009e6
+map2png npipe4v205_353_map_MDCOR.fits -bar -range 250
+
+map2png npipe4v207_030_map_MDCOR.fits -bar -min 0 -max 300
+map2png npipe4v207_044_map_MDCOR.fits -bar -min 0 -max 300
+map2png npipe4v207_070_map_MDCOR.fits -bar -min 0 -max 300
+map2png npipe4v205_100_map_MDCOR.fits -bar -min 0 -max 300
+map2png npipe4v205_143_map_MDCOR.fits -bar -min 0 -max 300
+map2png npipe4v205_217_map_MDCOR.fits -bar -min 0 -max 300
+map2png npipe4v205_353_map_MDCOR.fits -bar -min 0 -max 3000
+
+map_editor subtract_mono_dipole npipe4v207_030_map.fits commander_dx12_mask_n1024_likelihood_v2.fits npipe4v207_030_map_MDCOR.fits
+map_editor scale npipe4v207_030_map_MDCOR.fits npipe4v207_030_map_MDCOR.fits 0.9994003598e6
+map2png npipe4v207_030_map_MDCOR.fits -bar -range 250
+
+map_editor subtract_mono_dipole npipe4v207_044_map.fits commander_dx12_mask_n1024_likelihood_v2.fits npipe4v207_044_map_MDCOR.fits
+map_editor scale npipe4v207_044_map_MDCOR.fits npipe4v207_044_map_MDCOR.fits 1.0015022534e6
+map2png npipe4v207_044_map_MDCOR.fits -bar -range 250
+
+map_editor subtract_mono_dipole npipe4v207_070_map.fits commander_dx12_mask_n1024_likelihood_v2.fits npipe4v207_070_map_MDCOR.fits
+map_editor scale npipe4v207_070_map_MDCOR.fits npipe4v207_070_map_MDCOR.fits 1.0021044193e6
+map2png npipe4v207_070_map_MDCOR.fits -bar -range 250
+
+map_editor subtract_mono_dipole npipe4v205_100_map.fits commander_dx12_mask_n2048_likelihood_v2.fits npipe4v205_100_map_MDCOR.fits
+map_editor scale npipe4v205_100_map_MDCOR.fits npipe4v205_100_map_MDCOR.fits 1.0032102729e6
+map2png npipe4v205_100_map_MDCOR.fits -bar -range 250
+
+map_editor subtract_mono_dipole npipe4v205_143_map.fits commander_dx12_mask_n2048_likelihood_v2.fits npipe4v205_143_map_MDCOR.fits -0.0001 -0.0002 -0.0022 0.0025
+map_editor scale npipe4v205_143_map_MDCOR.fits npipe4v205_143_map_MDCOR.fits 1.0032102729e6
+map2png npipe4v205_143_map_MDCOR.fits -bar -range 250
+
+map_editor subtract_mono_dipole npipe4v205_217_map.fits commander_dx12_mask_n2048_likelihood_v2.fits npipe4v205_217_map_MDCOR.fits -0.0002 -0.0002 -0.0022 0.0025
+map_editor scale npipe4v205_217_map_MDCOR.fits npipe4v205_217_map_MDCOR.fits 1.0016025641e6
+map2png npipe4v205_217_map_MDCOR.fits -bar -range 250
+
+map_editor subtract_mono_dipole npipe4v205_353_map.fits commander_dx12_mask_n2048_likelihood_v2.fits npipe4v205_353_map_MDCOR.fits 0.0001 -0.0002 -0.0022 0.0025
+map_editor scale npipe4v205_353_map_MDCOR.fits npipe4v205_353_map_MDCOR.fits 1.0016025641e6
+map2png npipe4v205_353_map_MDCOR.fits -bar -range 250
+
+[Dataonsdag v2]
+Får fullres
+Korrigerer med samme parametere (For 545 og 857?)
+Plotter dx12 og npipe ved siden av hverandre 0-300 for alt under 350. 0-10 for over.
+Send til Hans-Kristian
+
+LFI kart er nside 1024
+
+[Chains Folders]
+* chains_cl_dx11_v3.3/
+
+* chains_cl_dx12_v2: 800 chi_hilat = 1.128 (Used for presentaition)
+chains_ml_dx12_v17_v1: 1000? chi_hilat = 260
+
+Chains_ml_npipe_v2: 30 iterations T??
+Chains_ml_npipe_v3: 1000 iterations, T3 (Data overwritten, see plots locally) (T=?? initially)
+Chains_ml_npipe_v4: 3 iterations, T3 (Rerun)
+
+Chains_ml_npipe_v5.1: T3,   0.90000      1.00000 chi_hilat = 12.614, 8:10.812
+Chains_ml_npipe_v5.2: T3,   0.90000      0.90000 chi_hilat = 3.845,  8:3.935
+Chains_ml_npipe_v5.3: T3,   1.10000      1.10000 chi_hilat = 17.118, 8:16.686
+* Chains_ml_npipe_v5.4: T3,   1.00000      1.10000 chi_hilat = 0.795,  8:0.596 (This is what was used) (Used in presentation)
+Chains_ml_npipe_v5.5: T3,   1.10000      0.90000 chi_hilat = 68.492, 8:58.726
+* Chains_ml_npipe_v5.6: T3,   1.01000      1.01000 chi_hilat = 2.373, 8:2.265
+Chains_ml_npipe_v5.7: T3,   1.00000      1.02000 chi_hilat = 1.226, 8:1.184
+Chains_ml_npipe_v5.8: T3,   1.02000      1.03000 chi_hilat = 2.894, 8:2.805
+Chains_ml_npipe_v5.9: T3,   1.00000      1.05000 chi_hilat = 0.8,   8:0.790
+
+Chains_ml_npipe_v5.9.1: T3, 1.00000      1.00000 chi_hilat = 1.675
+Chains_ml_npipe_v5.9.2: T3, 0.95000      1.05000 chi_hilat = 4.109
+Chains_ml_npipe_v5.9.3: T3, 1.00000      1.07000 chi_hilat = 0.681, 8:0.647
+Chains_ml_npipe_v5.9.4: T3, 1.00000      1.04000 chi_hilat = 0.909
+Chains_ml_npipe_v5.9.5: T3, 1.00000      1.03000 chi_hilat = 1.051
+Chains_ml_npipe_v5.9.6: T3, 1.00000      1.06000 chi_hilat = 0.722, 8:0.706
+Chains_ml_npipe_v5.9.7: T3, 1.00000      1.20000 chi_hilat = 2.818, 8:1.712
+Chains_ml_npipe_v5.9.8: T3, 1.00000      1.12000 chi_hilat = 1.011
+Chains_ml_npipe_v5.9.9: T3, 1.00000      1.14000 chi_hilat = 1.323
+
+Chains_ml_npipe_v6.1: T3, 1.01000      1.10000 chi_hilat = 0.791
+Chains_ml_npipe_v6.2: T3, 1.02000      1.10000 chi_hilat = 1.192
+Chains_ml_npipe_v6.3: T3, 1.03000      1.10000 chi_hilat = 1.990
+Chains_ml_npipe_v6.4: T3, 0.99000      1.10000 chi_hilat = 1.1194
+
+Chains_ml_npipe_v6.5: T3, 1.00500      1.08000 chi_hilat = 0.708 8:0.674
+Chains_ml_npipe_v6.6: T3, 1.00500      1.09000 chi_hilat = 0.708 8:0.674
+Chains_ml_npipe_v6.7: T3, 1.00500      1.10000 chi_hilat = 0.729 8:0.594
+
+* chains_ml_npipe_v7 good run? Old npipe maps (Used in presentation)
+chains_ml_npipe_v8 Continue v7 with new corrected maps (Something wrong chisq 4)
+chains_ml_npipe_v9 Debug (Still wrong)
+chains_ml_npipe_v9.1 Debug. Remake npipe 256 maps (Good -> got same results as 5.4)
+chains_ml_npipe_v9.2 Debug. Use good npipe 256 maps to cont run 7
+chains_ml_npipe_v9.3 Debug. Fresh run with method 1 mdcor
+chains_ml_npipe_v9.4 Test with new maps running fresh (Dipoles dont fit on LFI)
+chains_ml_npipe_v9.5 Calibrate dipoles on 44 and 70 (+545) from scratch
+chains_ml_npipe_v10 calibrate dipoles on 44 and 70 from scratch 1 ppb
+chains_ml_npipe_v11 Calibrate dipoles on 44 and 70 starting from v7 and continuing to 1000 with 4 ppb
+chains_ml_npipe_v12 Freeze CO values on 0.6 and 0.3. Use new gain values from Harald, (scale dipole map before correction and use in commander)
+chains_ml_npipe_v13 Freezing CO did not work in 12. Fixing and running again
+chains_ml_npipe_v14 adjusted 857 monopole to 0.6
+chains_ml_npipe_v14.1 adjusted 857 monopole to 0.52
+chains_ml_npipe_v14.2 adjusted 857 monopole to 0.62
+
+chains_ml_npipe_sbolo_v1 Single bolometer maps. 857 monopole 0.62, adjusting 44 and 70 dipoles (Redunadnt after gain from Harald), fitting CO
+chains_ml_npipe_sbolo_v2 Single bolometer maps. Frozen CO. Problem? (Maybe divide RMS by sqrt(n) not multiply?)
+chains_ml_npipe_sbolo_v3 Single bolometer. Dividing rms. (Worse)
+chains_ml_npipe_sbolo_v4 Does not exist?
+--- Sbolo wrong up until this point, co line ratios not added per band
+chains_ml_npipe_sbolo_v5 Corrected parameter file. (Wrong NUM_CO)
+chains_ml_npipe_sbolo_v6 Corrected NUM_CO
+chains_ml_npipe_sbolo_v7 Trying more CO channels (co 217 and 353 weird)
+chains_ml_npipe_sbolo_v8 Fix dipoles
+
+chains_ml_npipe_sbolo_v9.0 freeing up co-100
+chains_ml_npipe_sbolo_v9.1 freeing up co-100+217
+chains_ml_npipe_sbolo_v9.2 freeing up all co
+
+chains_ml_npipe_sbg_v1 gain estimation
+chains_ml_npipe_sbg_v2 new maps! Wrong gain! (Crashed but good)
+chains_ml_npipe_sbg_v3 Retrying
+chains_ml_npipe_sbg_v4 Retrying (On owl24 works!)
+chains_ml_npipe_sbg_v5
+
+chains_ml_npipe_sbg_0064_v1
+chains_ml_npipe_sbg_0064_v2 Frozen gain. new maps
+chains_ml_npipe_sbg_0064_v3 Fit gain. new maps
+chains_ml_npipe_sbg_0064_v4 Fit gain. new maps. 857 to 1.05
+
+chains_ml_npipe_sbg_0064_v6 Fit gain, new maps, monopole, bp corrections.
+chains_ml_npipe_sbg_0064_v7 Fit gain, new maps, monopole, bp corrections. CO line ratios on all sb
+* chains_ml_npipe_sbg_0064_v8 Fit gain, new maps, monopole (Frozen selected), bp corrections. CO line ratios on all sb
+
+
+* chains_ml_npipe5_shb_n0064_v1 Fit gain, npipe5v5, fit some monopoles and bp corrections. Some maps removed and some converted to shorn.
+chains_ml_npipe5_shb_n0064_v2 Dust beta prior to 1.6, removed 217 and converted 353-3 to shorn
+chains_ml_npipe5_shb_n0064_v3 353-4 to shorn, removed 353-1, 5 and 6.
+chains_ml_npipe5_shb_n0064_v4 Clean up nonused maps, zodi to 1, cont 3 with mixmat (GOTO)
+chains_ml_npipe5_shb_n0064_v5 running 3 with only zodi no cleanup
+chains_ml_npipe5_shb_n0064_v6 Cont script on 3 no changes
+chains_ml_npipe5_shb_n0064_v7 rerun 4 without zodi
+chains_ml_npipe5_shb_n0064_v8 same as 4 but without mixmat
+chains_ml_npipe5_shb_n0064_v9 Same as 8 but with more 545 and 857
+chains_ml_npipe5_shb_n0064_v10 setting all 857 gains to 1.
+* chains_ml_npipe5_shb_n0064_v11 857-2 to 1.1 and freezing with 545-2, while fitting rest
+chains_ml_npipe5_shb_n0064_v12 857 og 545 mask til fullsky
+chains_ml_npipe5_shb_n0064_v13 small mask on 353-857
+chains_ml_npipe5_shb_n0064_v13.1 removed 857-4 and dust-beta to 1.7
+chains_ml_npipe5_shb_n0064_v13.2 Fitting more monopoles (esp. 857)
+chains_ml_npipe5_shb_n0064_v13.3 temp prior to force dipole out. Cont 13.1. Fitting more monopoles
+chains_ml_npipe5_shb_n0064_v13.3.1 857 monopole to 0.64
+chains_ml_npipe5_shb_n0064_v13.3.2 857 monopole to 0.58
+chains_ml_npipe5_shb_n0064_v14 added removed 353 maps
+chains_ml_npipe5_shb_n0064_v15 continued 14 with more monopole corrections
+chains_ml_npipe5_shb_n0064_v16 set 353 line ratios to 1 and restart 15
+chains_ml_npipe5_shb_n0064_v17 restart 16 with 353-2 gain to 1.0 (mistake)
+* chains_ml_npipe5_shb_n0064_v18 restart 16 with 353-2 gain to 1.0 AND 857-2 to 1.1 (mistake) And free up gains on all except: 30, 143, 857-2
+
+
+chains_ml_npipe5_wmap_n0064_v1 all 353, wmap and haslam. Note: using radio and gain from ingunn! Removed zodi because 30% of the point sources are time dependant!!!
+chains_ml_npipe5_wmap_n0064_v2 add more components (Free-free). Slipp opp 30, frys wmap dipoler
+chains_ml_npipe5_wmap_n0064_v3 monopoles on wmap, mask on 857, 545 and 353 (Why was this not on?).
+chains_ml_npipe5_wmap_n0064_v4 353-2 and 857-2 gains were wrong! free up gains
+chains_ml_npipe5_wmap_n0064_v5 Free gains and monopoles on all bands, except: k-band, 143, 857-2
+
+[CORRECTIONS OVERVIEW]
+"./correct_mono_dipole METHOD:"
+$map_editor subtract ${inputmap[$i]}".fits" ${adjmap[$i]}".fits" diff.fits
+$map_editor subtract_mono_dipole diff.fits ${masks[$j]} correct.fits
+$map_editor subtract diff.fits correct.fits mono.fits
+$map_editor subtract ${inputmap[$i]}".fits" mono.fits ${inputmap[$i]}"_"$outputname".fits"
+$map_editor scale ${inputmap[$i]}"_"$outputname".fits" ${inputmap[$i]}"_"$outputname".fits" 1e6
+
+
+
+"FOR DX11 AGAIN"
+map_editor subtract map_dx11d_r2_bpc_044_0256_40arcmin_full.fits ../dx12/map_dx12_bpc_v2_044_0256_40arcmin_full.fits diff.fits
+map_editor subtract_mono_dipole diff.fits commander_dx12_mask_n0256_likelihood_v2.fits correct.fits
+map_editor subtract diff.fits correct.fits mono.fits
+map_editor subtract map_dx11d_r2_bpc_044_0256_40arcmin_full.fits mono.fits map_dx11d_r2_bpc_044_0256_40arcmin_full_MDCOR.fits
+
+"npipe 256"
+  - all maps corrected with ./correct_mono_dipole
+  - except 545 and 857 used fit_gain_offset
+
+  map_editor fit_gain_offset_dipole map_dx12_v2_857_0256_40arcmin_full.fits map_npipe4v205_v1_857_2_0256_40arcmin_full.fits mask_fullsky_n256.fits commander_dx12_mask_n0256_likelihood_v2.fits residual.fits
+  map_editor subtract_mono_dipole map_npipe4v205_v1_857_2_0256_40arcmin_full.fits commander_dx12_mask_n0256_likelihood_v2.fits map_npipe4v205_v1_857_2_0256_40arcmin_full_MDCOR.fits -1209982.0000 -2113.7407 -2830.7537 2800.3967
+  map_editor scale map_npipe4v205_v1_857_2_0256_40arcmin_full_MDCOR.fits map_npipe4v205_v1_857_2_0256_40arcmin_full_MDCOR.fits 0.000001543401441
+
+"npipe hires"
+  - All maps corrected with ./correct_mono_dipole
+    - changed npipe to npipehires etc.
+    - scaled masks using ud_grade
+    - scaled output by 1e6
+  - 545 and 857 corrected with fit_gain_offset values from 256
+
+
+"npipe 256 with dipole maps - Method 1"
+  - Input maps in muK, scale dipole map to muK
+
+  - fit_gain_offset_dipole to get gain and first offset (dx12 npipe masks..)
+  - subtract dipole from input - scale result with 1e6 (To muK)
+  - add_offset (scale offset for 30-353 with 1e6 because calculated in K)
+  - scale $gain (Dont need to scale gain number because it is a percentage) # DONT DO THIS!!
+
+
+"npipe fullres with dipole maps - Method 1"
+  - Input maps in K
+
+  - fit_gain_offset_dipole to get gain and first offset (dx12 npipe masks..) - For 545 and 857 use lores maps for this part!!
+  - subtract dipole from input
+  - add_offset ()
+
+MDCOR - Now removed scale
+
+[Smoothing maps (dipoles]
+ for i in 100 143 217; do map_editor smooth f2g dipolemaps/dipole_CMB_n2048_"$i"GHz.fits 0 768 256 beam_40arcmin.fits 40 dipolemaps/dipole_CMB_n0256_"$i"GHz.fits; done
+"For smoothing hires maps"
+
+"CORRECT!"
+for i in 30 44 70; do map_editor smooth g2g dipole_CMB_n1024_"$i"GHz.fits 0 768 256 0 40 dipole_CMB_n0256_"$i"GHz.fits; done
+for i in 100 143 217 353 545 857; do map_editor smooth g2g dipole_CMB_n2048_"$i"GHz.fits 0 768 256 0 40 dipole_CMB_n0256_"$i"GHz.fits; done
+
+[v12 fixing line ratios]
+In [33]: 0.3*(a2t353/a2t100)
+Out[33]: 3.2492227597358805
+
+In [34]: 0.6*(a2t217/a2t100)
+Out[34]: 1.4616115948802004
+
+[PLOTMAPS dipole removal]
+
+map_editor subtract_mono_dipole cmb_diff_dx11-npipe_k00001.fits commander_dx12_mask_n0064_likelihood_v2.fits mdcor.fits
+for file in refmap*; do
+  map_editor subtract cmb_diff_dx11-npipe_k00001.fits mdcor.fits md.fits
+  map_editor ud_grade md.fits 256 md256.fits
+  map_editor subtract $file md256.fits ${file/.fits/_MDCOR.fits}
+
+  file2=${file/.fits/_MDCOR.fits}
+  map_editor ud_grade $file2 64 ${file2/256/064} #40arcmin map
+
+  map_editor smooth g2g $file2 0 750 256 40 60 ${file2/n0256/n0256_60arcmin} #smooth to 60arcmin
+  file3=${file2/n0256/n0256_60arcmin}
+  map_editor ud_grade $file3 64 ${file3/256/064} #60arcmin map
+  rm md256.fits
+done
+rm mdcor.fits
+
+[SBOLO]
+cp param_ml_npipe_sbolo_v9.0.txt chains_ml_npipe_sbolo_v9.0/; mpirun -n 38 /uio/hume/student-u68/trygvels/master/Commander/commander1/src/commander/commander param_ml_npipe_sbolo_v9.0.txt 2>&1 | tee chains_ml_npipe_sbolo_v9.0/slurm.txt
+cp param_ml_npipe_sbolo_v9.1.txt chains_ml_npipe_sbolo_v9.1/; mpirun -n 38 /uio/hume/student-u68/trygvels/master/Commander/commander1/src/commander/commander param_ml_npipe_sbolo_v9.1.txt 2>&1 | tee chains_ml_npipe_sbolo_v9.1/slurm.txt
+cp param_ml_npipe_sbolo_v9.2.txt chains_ml_npipe_sbolo_v9.2/; mpirun -n 38 /uio/hume/student-u68/trygvels/master/Commander/commander1/src/commander/commander param_ml_npipe_sbolo_v9.2.txt 2>&1 | tee chains_ml_npipe_sbolo_v9.2/slurm.txt
+for 100, 217 and 353
+1. *get single bolometer map (bmap)
+2. *smooth maps (Script done) - smooth_sbolo
+2. *MDCOR maps (Script done) - mdsbolo
+3. *scale rms with sqrt(n_maps) 8,12,12
+4. *Make new parameter file
+  - Changed input maps to 38
+  - change fg templates (Use same zodi on all)
+  - 100-1a or whatever as CO reference (04)
+  - 857 as reference for dust (38)
+
+RMS lores = sqrt(n)RMS
+RMS hires = sigma_0(reijo)/sqrt(hmap)
+param_ml_npipe_sbolo_v1
+chains_ml_npipe_sbolo_v1
+
+Free up CO after a while.
+Use Line ratio fractions now that we are using multiple maps (Between 0 and 1)
+
+"GAIN ESTIMATION"
+for filename in *256*.fits; do map_editor ud_grade ${filename} 64 ${filename/256/064}; done
+"SMOOTHING"
+for filename in calib*iter02_100*.fits; do map_editor smooth f2g ${filename} 0 750 0256 beam_dx12_100x100_extended_npipe4.fits 40 ${filename/iter02/n0256} "10"; map_editor scale ${filename/iter02/n0256} ${filename/iter02/n0256} 1e6; done
+
+[SHORN]
+1. *get single bolometer map (bmap)
+2. *smooth maps (Script done) - smooth_sbolo
+3. *MDCOR maps (Script done) - mdshorn
+4. *Rms maps DIVIDE old by sqrt(2)* or filename in rms*.fits; do map_editor scale ${filename} ${filename/SBOLO/SHORN} 0.7071067812; done
+5. *bandpass average of 2 graphs
+
+[NPIPE5v5 AND SHORN]
+1. *get all new maps
+2. *Smooth SBOLO AND SHORN: for filename in calib*iter02_100*.fits; do map_editor smooth f2g ${filename} 0 750 0256 beam_dx12_100x100_extended_npipe4.fits 40 ${filename/iter02/n0256} "10"; map_editor scale ${filename/iter02/n0256} ${filename/iter02/n0256} 1e6; done
+3. *Smooth normal maps:      for filename in npipe5v5*100*.fits; do map_editor smooth f2g ${filename} 0 750 0256 beam_dx12_100x100_extended_npipe4.fits 40 ${filename/_map/n0256_map} "10"; map_editor scale ${filename/_map/n0256_map} ${filename/_map/n0256_map} 1e6; done
+4. *MD-correct all maps
+5. Change input names in parameter files
+
+for i in 030 044 070; do for filename in npipe5v4_${i}*_map.fits; do map_editor smooth f2g ${filename} 0 750 0256 beam_dx12_"$i"x"$i"_extended_npipe4.fits 40 ${filename/_map/_n0256_map} "10"; map_editor scale ${filename/_map/_n0256_map} ${filename/_map/_n0256_map} 1e6; done; done
+for i in 100 143 217 353 545 857; do for filename in npipe5v5_${i}*_map.fits; do map_editor smooth f2g ${filename} 0 750 0256 beam_dx12_"$i"x"$i"_extended_npipe4.fits 40 ${filename/_map/_n0256_map} "10"; map_editor scale ${filename/_map/_n0256_map} ${filename/_map/_n0256_map} 1e6; done; done
+
+[WMAP and HASLAM]
+/mn/stornext/u3/ingunnkw/resdata/dx11d2/xband/param_ml_32band_mixmat.txt
+1. * Smooth old maps to 60 arcmin
+for file in *064*40arcmin*fits; do map_editor smooth g2g $file 0 750 64 0 60 ${file/40arcmin/60arcmin}; done
+done this :
+
+for file in *fits; do map_editor smooth g2g $file 0 750 256 0 60 ${file/.fits/_60arcmin.fits}; done
+for file in *60arcmin.fits; do map_editor ud_grade $file 64 ${file/256/064}; done
+
+2. * degrade to nside 64
+3. * rms_dx12_60arcmin (single bolo convert with sqrt)
+  multiply maps by:
+    100*
+4. Correct numbering when we know 545 and 857
+
+"COMMANDER BEYOND PLANCK"
+
+Metropolis:
+Cant evaluate a distribution, but we can sample from it.
+1. Chose theta0(A0,B0)
+2. Choose a transition rule, T(theta_i+1|theta_i)
+3. Compute accept probability a = P(theta^(i+1)/P(theta^i)
+The density of points in the 2d distribution looks like the true distribution
+Metropolis-Hastings:
+3. a = P(theta^(i+1)/P(theta^i)*T(theta^i|theta^i+1)/T(theta^i+1|theta^i)
+Can be used with non-gaussian distributions
+Gibbs:
+T(A^i+1,B^i+1|A^i,B^i)=delta(B^i+1)
+
+[NOW]
+for file in calibrated_iter02_*_0256_bmap.fits; do map_editor subtract_mono_dipole $file ../mask_chisq_15band_n256_v2_ptsrc.fits out.fits | awk 'END{print>>"sbolo_dipoles.txt"}1'; done
+
+Make BP shorn 143
+
+What to do:
+Did the southern blob come after 1.1 gain?
+WMAP: spinning dust
+input smoothing wrong
+
+[WMAP STUFF NOW]
+"question:"
+adjust monopoles and dipoles for wmap and haslam? Gain to 1? (Use gains from ingunn)
+radio source templates?? (remove)
+"also ringing, so smooth:"
+
+for file in calib*fits; do map_editor smooth g2g $file 0 750 256 0 60 ${file/bmap/60arcmin}; done
+for file in calib*60arcmin*.fits; do map_editor ud_grade $file 64 ${file/256/064}; done
+
+for file in rms*dx12*.fits; do map_editor ud_grade $file 64 ${file/256/064}; done
+
+for file in npipe*fits; do map_editor smooth g2g $file 0 750 256 0 60 ${file/map/60arcmin}; done
+for file in npipe*60arcmin*.fits; do map_editor ud_grade $file 64 ${file/256/064}; done
+
+for file in init_radio*fits; do map_editor smooth g2g $file 0 750 256 0 60 ${file/40arcmin/60arcmin}; done
+for file in init_radio*60arcmin*.fits; do map_editor ud_grade $file 64 ${file/256/064}; done
+
+for file in zodi*fits; do map_editor smooth g2g $file 0 750 256 0 60 ${file/40arcmin/60arcmin}; done
+for file in zodi*60arcmin*.fits; do map_editor ud_grade $file 64 ${file/256/064}; done
