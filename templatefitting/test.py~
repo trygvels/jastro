@@ -1,0 +1,14 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+frac_flat = 6.0
+nu_flat = 100
+
+nu_steep = nu_flat 
+delta    = -frac_flat 
+if (nu > nu_steep) then
+   compute_one_comp_dust_spectrum = (exp(x*nu_ref)-1.d0) / (exp(x*nu)-1.d0) * (nu/nu_ref)**(beta+1.d0)
+else
+   compute_one_comp_dust_spectrum = (exp(x*nu_steep)-1.d0) / (exp(x*nu)-1.d0) * (nu/nu_steep)**(beta+1.d0+delta) * &
+   (exp(x*nu_ref)-1.d0) / (exp(x*nu_steep)-1.d0) * (nu_steep/nu_ref)**(beta+1.d0)
+   end if

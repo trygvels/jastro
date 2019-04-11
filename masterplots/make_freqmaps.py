@@ -1,8 +1,11 @@
-from setup_matplotlib import *
+#from setup_matplotlib import *
+import matplotlib.pyplot as plt
+import numpy as np
 import healpy as hp
 import matplotlib.cm as cm
 import numpy as N
-
+def cm2inch(value):
+     return value/2.54
 cmbtest="/Users/trygveleithesvalheim/Datafiles/mdata/npipe/fits/"
 dx12="/Users/trygveleithesvalheim/Datafiles/mdata/dx12/fits_v2/master64/"
 dx11="/Users/trygveleithesvalheim/Datafiles/mdata/dx11/fits_v3.3/64diffs/"
@@ -256,8 +259,8 @@ for f in freqs:
             #(pres+"map_8.fits", "map_8", -300, 300, r"$\mu\mathrm{K}$", "", 1, [-300,300], [r"$-300$", r"$300$"], 0, 0,""),
             #(dx12+"chisq_64.fits", "chidx12", 0, 18, "", r"$\chi^2$", 1, [0,18], [r"$0$", r"$18$"], 1, 0,""),
 
-            (slide3+"residual_857-3_c01_k00400_MJy.fits", "npipe_residual_857-3",  -5e-2, 5e-2, r"$\mathrm{MJy/sr}$", "857-3", 1, [-5e-2,5e-2], [r"$-0.05$", r"$0.05$"], 1, 0,""),
-            (slide3+"residual_353-2_c01_k00400.fits", "npipe_residual_353-2", -20, 20, r"$\mu\mathrm{K}$", "353-2", 1, [-20,20], ["-20", r"$20$"], 1, 0,""),
+            #(slide3+"residual_857-3_c01_k00400_MJy.fits", "npipe_residual_857-3",  -5e-2, 5e-2, r"$\mathrm{MJy/sr}$", "857-3", 1, [-5e-2,5e-2], [r"$-0.05$", r"$0.05$"], 1, 0,""),
+            ("chisq_c0001_k01000.fits", "npipe_residual_353-2", -20, 20, r"$\mu\mathrm{K}$", "353-2", 1, [-20,20], ["-20", r"$20$"], 1, 0,""),
             ]:
 
             m = hp.ma(hp.read_map(filename))*scale
@@ -382,7 +385,7 @@ for f in freqs:
             #plt.text(5., -1.2, r"%s" % yr, ha='center', va='center')
 
             plt.tight_layout()
-            plt.savefig("figs/slide3/"+outfile+"_w"+str(width)+".png", bbox_inches='tight',  pad_inches=0.02)
+            plt.savefig(outfile+"_w"+str(width)+".png", bbox_inches='tight',  pad_inches=0.02)
 
         #plt.draw()
         #plt.show()
